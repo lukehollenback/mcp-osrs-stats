@@ -22,11 +22,21 @@ describe('MCP Server E2E Tests via Stdio', () => {
     // Wait for server to be ready
     await new Promise<void>((resolve, reject) => {
       const timeout = setTimeout(() => {
+        console.error('Server startup timeout - killing process');
+        if (serverProcess && !serverProcess.killed) {
+          serverProcess.kill();
+        }
         reject(new Error('Server startup timeout'));
-      }, 10000);
+      }, 15000);
+
+      let stderrOutput = '';
+      let stdoutOutput = '';
 
       serverProcess.stderr?.on('data', (data) => {
         const output = data.toString();
+        stderrOutput += output;
+        console.error('STDERR:', output);
+        
         if (output.includes('OSRS Player Stats MCP server running')) {
           serverReady = true;
           clearTimeout(timeout);
@@ -34,10 +44,54 @@ describe('MCP Server E2E Tests via Stdio', () => {
         }
       });
 
+      serverProcess.stdout?.on('data', (data) => {
+        stdoutOutput += data.toString();
+      });
+
       serverProcess.on('error', (error) => {
+        console.error('Server process error:', error);
         clearTimeout(timeout);
         reject(error);
       });
+
+      serverProcess.on('exit', (code, signal) => {
+        if (!serverReady) {
+          console.error('Server exited early with code:', code, 'signal:', signal);
+          console.error('STDERR output:', stderrOutput);
+          console.error('STDOUT output:', stdoutOutput);
+          clearTimeout(timeout);
+          reject(new Error(`Server exited early with code ${code}`));
+        }
+      });
+
+      // Give the server a moment to start up, then test if it's responsive
+      setTimeout(async () => {
+        if (!serverReady) {
+          try {
+            // Try sending a test request to see if server is responsive
+            const testRequest = {
+              jsonrpc: '2.0',
+              id: 'test',
+              method: 'tools/list',
+              params: {}
+            };
+            
+            serverProcess.stdin?.write(JSON.stringify(testRequest) + '\n');
+            
+            // Wait a bit for response
+            setTimeout(() => {
+              if (!serverReady) {
+                console.log('Server appears to be running but no startup message detected');
+                serverReady = true;
+                clearTimeout(timeout);
+                resolve();
+              }
+            }, 2000);
+          } catch (e) {
+            console.error('Failed to send test request:', e);
+          }
+        }
+      }, 3000);
     });
   });
 

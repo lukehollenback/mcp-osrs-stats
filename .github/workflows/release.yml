@@ -30,7 +30,7 @@ jobs:
       run: npm ci
       
     - name: Run tests
-      run: npm run test:unit && npm run test:integration
+      run: npm test
       
     - name: Build project
       run: npm run build
