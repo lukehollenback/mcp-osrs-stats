@@ -1,0 +1,59 @@
+{
+  "name": "mcp-osrs-stats",
+  "version": "1.0.0",
+  "description": "MCP server providing OSRS player statistics and leaderboard data to AI assistants",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-osrs-stats": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "CLAUDE.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukehollenback/mcp-osrs-stats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lukehollenback/mcp-osrs-stats/issues"
+  },
+  "homepage": "https://github.com/lukehollenback/mcp-osrs-stats#readme",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "jest tests/e2e",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "mcp",
+    "osrs",
+    "runescape",
+    "statistics",
+    "model-context-protocol"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "osrs-json-hiscores": "^2.23.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

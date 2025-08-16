@@ -1,0 +1,29 @@
+# Source files
+src/
+tests/
+docs/
+
+# Development files
+.github/
+*.config.js
+jest.resolver.js
+tsconfig.json
+.gitignore
+
+# Development dependencies
+node_modules/
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Only include what's specified in package.json "files" field
