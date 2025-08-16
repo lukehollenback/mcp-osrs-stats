@@ -1,6 +1,6 @@
 {
   "name": "mcp-osrs-stats",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server providing OSRS player statistics and leaderboard data to AI assistants",
   "main": "dist/index.js",
   "bin": {
