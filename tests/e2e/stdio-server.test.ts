@@ -35,7 +35,6 @@ describe('MCP Server E2E Tests via Stdio', () => {
       serverProcess.stderr?.on('data', (data) => {
         const output = data.toString();
         stderrOutput += output;
-        console.error('STDERR:', output);
         
         if (output.includes('OSRS Player Stats MCP server running')) {
           serverReady = true;

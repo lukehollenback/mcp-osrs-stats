@@ -1,7 +1,6 @@
 {
   "name": "mcp-osrs-stats",
-  "version": "1.0.4",
-  "type": "module",
+  "version": "1.0.5",
   "description": "MCP server providing OSRS player statistics and leaderboard data to AI assistants",
   "main": "dist/index.js",
   "bin": {
@@ -21,7 +20,7 @@
   },
   "homepage": "https://github.com/lukehollenback/mcp-osrs-stats#readme",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && echo '{\"type\":\"module\"}' > dist/package.json",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
