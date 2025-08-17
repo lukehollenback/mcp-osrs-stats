@@ -1,8 +1,8 @@
 # OSRS Player Stats MCP Server
 
 [![CI](https://github.com/lukehollenback/mcp-osrs-stats/workflows/CI/badge.svg)](https://github.com/lukehollenback/mcp-osrs-stats/actions)
-[![codecov](https://codecov.io/gh/lukehollenback/mcp-osrs-stats/branch/main/graph/badge.svg)](https://codecov.io/gh/lukehollenback/mcp-osrs-stats)
-[![npm version](https://badge.fury.io/js/mcp-osrs-stats.svg)](https://badge.fury.io/js/mcp-osrs-stats)
+[![codecov](https://codecov.io/gh/lukehollenback/mcp-osrs-stats/graph/badge.svg)](https://codecov.io/gh/lukehollenback/mcp-osrs-stats)
+[![npm version](https://img.shields.io/npm/v/mcp-osrs-stats.svg)](https://www.npmjs.com/package/mcp-osrs-stats)
 
 A Model Context Protocol (MCP) server that provides real-time Old School RuneScape (OSRS) player statistics and leaderboard data to AI assistants.
 
