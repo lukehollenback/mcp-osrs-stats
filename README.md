@@ -127,10 +127,20 @@ All errors include helpful information to guide correct usage.
 
 ## Contributing
 
-1. Review `CLAUDE.md` for complete technical specification and development patterns
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines including:
+
+- Development setup and workflow
+- Coding standards and style guidelines  
+- Testing requirements
+- Git workflow and commit conventions
+- Documentation standards
+
+**Quick Start for Contributors:**
+1. Review `CLAUDE.md` for complete technical specification
 2. Check `DECISIONS.md` for architectural context and decision history
-3. Follow existing code patterns and ensure all changes are properly typed and validated
-4. Run the full test suite before submitting PRs
+3. Follow the coding standards enforced by ESLint and Prettier
+4. Ensure all tests pass and maintain high coverage
+5. Use the pre-commit hooks to validate changes
 
 ## License
 
