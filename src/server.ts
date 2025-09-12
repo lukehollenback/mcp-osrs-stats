@@ -92,8 +92,35 @@ export class OSRSMCPServer {
 
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
-    await this.server.connect(transport);
     
-    console.error('OSRS Player Stats MCP server running on stdio');
+    // Handle process termination gracefully
+    process.on('SIGINT', () => {
+      console.error('Received SIGINT, shutting down gracefully...');
+      process.exit(0);
+    });
+    
+    process.on('SIGTERM', () => {
+      console.error('Received SIGTERM, shutting down gracefully...');
+      process.exit(0);
+    });
+    
+    // Handle uncaught errors to prevent hanging
+    process.on('uncaughtException', (error) => {
+      console.error('Uncaught exception:', error);
+      process.exit(1);
+    });
+    
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('Unhandled rejection at:', promise, 'reason:', reason);
+      process.exit(1);
+    });
+    
+    try {
+      await this.server.connect(transport);
+      console.error('OSRS Player Stats MCP server running on stdio');
+    } catch (error) {
+      console.error('Failed to start server:', error);
+      process.exit(1);
+    }
   }
 }

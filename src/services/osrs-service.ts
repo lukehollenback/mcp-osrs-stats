@@ -8,6 +8,16 @@ import {
 } from '../types/osrs-types.js';
 import { formatPlayerStats, formatLeaderboardEntry, sanitizeUsername } from '../utils/formatting.js';
 
+// Timeout wrapper for API calls
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number = 10000): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Operation timed out after ${timeoutMs}ms`)), timeoutMs)
+    )
+  ]);
+}
+
 export class OSRSService {
   constructor() {
   }
@@ -15,7 +25,10 @@ export class OSRSService {
   async getPlayerStats(username: string, gamemode: GameMode = 'main'): Promise<PlayerStats> {
     try {
       const sanitizedUsername = sanitizeUsername(username);
-      const rawData = await getStatsByGamemode(sanitizedUsername, gamemode as any);
+      const rawData = await withTimeout(
+        getStatsByGamemode(sanitizedUsername, gamemode as any),
+        10000
+      );
       
       return formatPlayerStats(rawData, sanitizedUsername, gamemode);
     } catch (error: any) {
@@ -33,7 +46,10 @@ export class OSRSService {
     page: number = 1
   ): Promise<LeaderboardResponse> {
     try {
-      const rawData = await getSkillPage(skill as any, gamemode as any, page);
+      const rawData = await withTimeout(
+        getSkillPage(skill as any, gamemode as any, page),
+        10000
+      );
       
       const entries = rawData.map((entry: any) => formatLeaderboardEntry(entry, true));
       
@@ -58,7 +74,10 @@ export class OSRSService {
     page: number = 1
   ): Promise<LeaderboardResponse> {
     try {
-      const rawData = await getActivityPage(activity as any, gamemode as any, page);
+      const rawData = await withTimeout(
+        getActivityPage(activity as any, gamemode as any, page),
+        10000
+      );
       
       const entries = rawData.map((entry: any) => formatLeaderboardEntry(entry, false));
       
@@ -87,7 +106,10 @@ export class OSRSService {
         this.getPlayerStats(username)
       );
       
-      const playersData = await Promise.all(playerDataPromises);
+      const playersData = await withTimeout(
+        Promise.all(playerDataPromises),
+        30000 // Longer timeout for multiple API calls
+      );
       
       const comparison: any = {};
       
