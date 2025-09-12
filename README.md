@@ -27,7 +27,9 @@ npm install -g mcp-osrs-stats
 mcp-osrs-stats
 ```
 
-## Claude Desktop Configuration
+## Usage
+
+### Claude Desktop Configuration
 
 Add this to your Claude Desktop configuration file:
 
@@ -41,6 +43,39 @@ Add this to your Claude Desktop configuration file:
   }
 }
 ```
+
+### Remote Access via Supergateway
+
+For remote access or HTTP integration, use [Supergateway](https://www.npmjs.com/package/supergateway) to expose the MCP server over HTTP:
+
+```bash
+# Start the server with Streamable HTTP endpoint
+npx supergateway --stdio "npx mcp-osrs-stats" --outputTransport streamableHttp --port 3000
+
+# Server will be available at: http://localhost:3000/mcp
+```
+
+**Example HTTP requests:**
+
+```bash
+# List available tools
+curl -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'
+
+# Get player stats
+curl -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"get_player_stats","arguments":{"username":"zezima"}},"id":2}'
+```
+
+**Deployment Options:**
+- Deploy Supergateway + MCP server to any cloud provider
+- Use with serverless functions or containers
+- Integrate with web applications via HTTP endpoints
+- Connect multiple AI systems to the same OSRS data source
 
 ## Available Tools
 

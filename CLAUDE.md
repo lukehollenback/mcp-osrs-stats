@@ -161,6 +161,65 @@ When `DECISIONS.md` reaches 250 entries:
 - Three-tier testing strategy with module resolution
 - Comprehensive MCP server testing focus
 
+## Chain Verification and Testing
+
+When testing or validating this MCP server, follow these steps to verify the full Claude Desktop → Supergateway → MCP server chain:
+
+### Local Chain Testing
+
+1. **Verify NPM Package Publication:**
+   ```bash
+   npm view mcp-osrs-stats version
+   ```
+
+2. **Start Supergateway with MCP Server:**
+   ```bash
+   npx supergateway --stdio "npx mcp-osrs-stats" --outputTransport streamableHttp --port 3000
+   ```
+   - Should show: `StreamableHttp endpoint: http://localhost:3000/mcp`
+   - Uses stateless mode (appropriate for OSRS API which has no session state)
+
+3. **Test Tools List:**
+   ```bash
+   curl -X POST http://localhost:3000/mcp \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/json, text/event-stream" \
+     -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'
+   ```
+   - Should return all 4 tools: get_player_stats, get_skill_leaderboard, get_activity_leaderboard, compare_players
+
+4. **Test Player Stats (with timeout verification):**
+   ```bash
+   curl -X POST http://localhost:3000/mcp \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/json, text/event-stream" \
+     -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"get_player_stats","arguments":{"username":"zezima"}},"id":2}'
+   ```
+   - Should return complete player stats within 10 seconds (timeout protection)
+   - Response includes skills, bosses, activities data
+
+5. **Test Leaderboard:**
+   ```bash
+   curl -X POST http://localhost:3000/mcp \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/json, text/event-stream" \
+     -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"get_skill_leaderboard","arguments":{"skill":"overall","page":1}},"id":3}'
+   ```
+   - Should return top 25 players for overall skill rankings
+
+### Expected Behavior
+- **No timeouts or hangs** - all requests complete within configured timeouts
+- **Proper error handling** - invalid requests return helpful error messages  
+- **Graceful shutdown** - server responds to SIGINT/SIGTERM signals
+- **Stateless operation** - each request is independent, no session management needed
+
+### Troubleshooting Chain Issues
+- If server hangs: Check that timeout handlers are working (v1.0.6+ required)
+- If Supergateway fails: Verify Accept headers include both `application/json` and `text/event-stream`
+- If MCP server crashes: Check process termination handlers and uncaught exception handling
+
+This verification process ensures the full integration chain works correctly from Claude Desktop through Supergateway to the MCP server.
+
 ## Regeneration Requirements
 This specification contains all information needed to recreate the project:
 - Complete architecture and file structure
@@ -170,3 +229,4 @@ This specification contains all information needed to recreate the project:
 - Data validation and transformation logic
 - Distribution and deployment setup
 - Decision log management process
+- Chain verification and testing procedures
